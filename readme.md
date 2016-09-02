@@ -6,6 +6,7 @@ FrameworkG是一个现代化的网页先后端整合框架。这个框架非常�
 ##Current Status
 Currenty the project is maintained by Codetector and DE_DZ_TBH. As we are busy overall, but you are more than welcome to open bug reports and feathre requests inside the repo.  
  >Your suggestions will be great help to this software.
+
 ##Beta Version Notice
 This software is still in beta for now. The functionality may not be complete, and major changes tends to be make in the future.
 
