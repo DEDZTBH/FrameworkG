@@ -1,0 +1,130 @@
+/*!
+ * ZUI - v1.4.0 - 2016-08-31
+ * http://zui.sexy
+ * GitHub: https://github.com/easysoft/zui.git 
+ * Copyright (c) 2016 cnezsoft.com; Licensed MIT
+ */
+
+.board-item
+{
+    margin-bottom: 5px;
+    padding: 6px 10px;
+
+    -webkit-transition: all .4s cubic-bezier(.175, .885, .32, 1);
+            transition: all .4s cubic-bezier(.175, .885, .32, 1);
+
+    border: 1px solid #ddd;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .05);
+}
+.board-item:hover
+{
+    box-shadow: 0 1px 1 rgba(0, 0, 0, .1);
+}
+.board-item.board-item-empty
+{
+    display: none;
+
+    color: #808080;
+    border-style: dashed;
+}
+.board-item.board-item-shadow
+{
+    display: none;
+
+    padding: 0;
+
+    -webkit-transition: all .4s cubic-bezier(.175, .885, .32, 1);
+            transition: all .4s cubic-bezier(.175, .885, .32, 1);
+
+    border: none;
+    border-color: #ddd;
+    background: #ddd;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, .1);
+}
+.board-item.drag-shadow
+{
+    width: 250px;
+
+    cursor: move;
+
+    opacity: .9;
+    border-color: #c4c4c4;
+    background-color: #fff;
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, .25);
+}
+.board-item.drag-from
+{
+    background-color: #ebf2f9;
+}
+.board-list .board-item:last-child
+{
+    margin-bottom: 0;
+}
+.board
+{
+    float: left;
+
+    width: 250px;
+    margin-right: 10px;
+}
+.board.drop-in-empty .board-item-empty
+{
+    overflow: hidden;
+
+    height: 0;
+    margin: 0;
+    padding: 0;
+
+    border: transparent;
+}
+.board:last-child
+{
+    margin-right: 0;
+}
+.board > .panel-body
+{
+    padding: 5px;
+
+    background: #f1f1f1;
+}
+.boards:before,
+.boards:after
+{
+    /* 1 */
+    display: table;
+
+    content: ' ';
+    /* 2 */
+}
+.boards:after
+{
+    clear: both;
+}
+.boards.dragging .board.drop-in
+{
+    border-color: #c4c4c4;
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, .25);
+}
+.boards.dragging .board.drop-in .board-item-shadow
+{
+    display: block;
+}
+.boards.dragging .board .board-item.board-item-empty
+{
+    display: block;
+}
+.boards.dragging .board-item.disable-drop
+{
+    display: none;
+}
+.boards.drop-in .board-item.drag-from
+{
+    overflow: hidden;
+
+    height: 0;
+    margin: 0;
+    padding: 0;
+
+    border: transparent;
+}

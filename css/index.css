@@ -1,0 +1,15 @@
+.articleTitleFont{
+    font-size: x-large;
+}
+
+.login-parent {
+    max-width: 320px;
+}
+.align-center{
+    margin-left:auto;
+    margin-right:auto;
+}
+.vertic{
+    /*position: relative;*/
+    top: 50%;
+}

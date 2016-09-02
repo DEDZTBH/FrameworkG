@@ -1,0 +1,26 @@
+{
+  "name": "GuardianPanel",
+  "authors": [
+    "Codetector <codetector@codetector.cn>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.11.2",
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "font-awesome": "^4.6.3",
+    "angular-sanitize": "^1.5.8",
+    "angular-i18n": "^1.5.8",
+    "js-cookie": "^2.1.3"
+  }
+}

@@ -1,0 +1,35 @@
+<!--<div class="row vertic text-center">-->
+    <!--<div class="panel login-parent">-->
+
+    <!--</div>-->
+<!--</div>-->
+<div class="row">
+    <div class="vertic">
+        <div class="panel login-parent align-center">
+            <div class="panel-heading">
+                <h2>登录{{cms_site_title}}</h2>
+            </div>
+            <div class="panel-body" ng-controller="loginCtrl">
+                <form ng-submit="login()">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="username">邮箱</label>
+                        <input type="text" id="username" class="form-control" ng-model="username"
+                               placeholder="手机号/邮箱" required>
+                    </div><!-- Username Field-->
+                    <br>
+                    <div class="input-group">
+                        <label class="input-group-addon" for="password">密码</label>
+                        <input type="password" id="password" class="form-control" ng-model="password"
+                               placeholder="密码" required="">
+                    </div><!-- password Field-->
+                    <br>
+                    <button type="submit" class="btn btn-block btn-primary" ng-disabled="isLoggingIn">
+                        登录
+                    </button>
+                    <br>
+                    <!--<a class="btn btn-link btn-block" href="#/register">立即注册</a>-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
