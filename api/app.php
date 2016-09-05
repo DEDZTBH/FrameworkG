@@ -1,11 +1,12 @@
 <?php
+include_once "include/db.php";
 class Database
 {
-    private static $db_address = "localhost";
-    private static $db_username = "eldor";
-    private static $db_password = "5e5S8Dlu5vkV0ZXF";
-    private static $db_name = "eldor";
-    public static $db_prefix = "eldor_";
+    private static $db_address = db_host;
+    private static $db_username = db_user;
+    private static $db_password = db_pass;
+    private static $db_name = db_name;
+    public static $db_prefix = db_prefix;
 
     private static $db_conn;
 

@@ -1,3 +1,9 @@
+<?php
+if (!file_exists("./api/include/db.php")){
+    header('Location: '.'/install');
+    die();
+}
+?>
 <!DOCTYPE html>
 <html lang="zh_cn" ng-app="cms" ng-controller="globalCtrl">
 <head>
