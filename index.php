@@ -10,6 +10,7 @@ if (!file_exists("./api/include/db.php")){
     <meta charset="UTF-8">
     <title>{{cms_site_title}}</title>
     <link href="css/zui/dist/css/zui.min.css" rel="stylesheet"/>
+    <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>

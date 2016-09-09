@@ -483,7 +483,7 @@ module.exports = function(options, logger) {
 
 },{"../less/environment/abstract-file-manager.js":14}],7:[function(require,module,exports){
 //
-// app.js
+// index.js
 // Should expose the additional browser functions on to the less object
 //
 var addDataAttr = require("./utils").addDataAttr,

@@ -2,7 +2,7 @@
  * ZUI: lightbox.js
  * http://zui.sexy
  * ========================================================================
- * Copyright (c) 2014 cnezsoft.com; Licensed MIT
+ * Copyright (c) 2014-2016 cnezsoft.com; Licensed MIT
  * ======================================================================== */
 
 
@@ -77,7 +77,7 @@
                         width: Math.min(winWidth, this.width)
                     });
                     if(winWidth < (this.width + 30)) modal.addClass('lightbox-full');
-                    e.ready();
+                    e.ready(200);
                 });
 
                 modal.find('.prev').toggleClass('show', groups.filter('[data-group-index="' + (groupIndex - 1) + '"]').length > 0);

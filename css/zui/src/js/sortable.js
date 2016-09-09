@@ -2,12 +2,17 @@
  * ZUI: sortable.js
  * http://zui.sexy
  * ========================================================================
- * Copyright (c) 2014 cnezsoft.com; Licensed MIT
+ * Copyright (c) 2014-2016 cnezsoft.com; Licensed MIT
  * ======================================================================== */
 
 
 + function($, window, document, Math) {
     'use strict';
+
+    if(!$.fn.droppable) {
+        console.error('Sortable requires droppable.js');
+        return;
+    }
 
     var Sortable = function(element, options) {
         this.$ = $(element);

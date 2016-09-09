@@ -1,0 +1,6 @@
+<nav class="menu" ng-controller="adminSideNavCtrl">
+    <ul class="nav nav-primary" style="border-radius: 5px; min-height: 400px; padding: 30px 0px;">
+        <li ng-class="{'active':getActiveClass('#/admin')}"><a href="#/admin"><i class="fa fa-dashboard"></i> 仪表盘</a></li>
+        <li ng-class="{'active':getActiveClass('#/admin/settings')}"><a href="#/admin/settings"><i class="fa fa-gears"></i> 设置</a></li>
+    </ul>
+</nav>

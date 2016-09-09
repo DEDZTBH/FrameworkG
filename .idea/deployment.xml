@@ -7,6 +7,13 @@
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/css/zui/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/css/zui/assets" />
+            <excludedPath local="true" path="$PROJECT_DIR$/css/zui/build" />
+            <excludedPath local="true" path="$PROJECT_DIR$/css/zui/docs" />
+            <excludedPath local="true" path="$PROJECT_DIR$/css/zui/src" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

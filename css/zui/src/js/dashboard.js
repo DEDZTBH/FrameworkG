@@ -2,12 +2,14 @@
  * ZUI: dashboard.js
  * http://zui.sexy
  * ========================================================================
- * Copyright (c) 2014 cnezsoft.com; Licensed MIT
+ * Copyright (c) 2014-2016 cnezsoft.com; Licensed MIT
  * ======================================================================== */
 
 
 (function($, Math) {
     'use strict';
+
+    var dashboardMessager = $.zui.Messager ? new $.zui.Messager({placement: 'top', time: 1500, close: 0, scale: false, fade: false}) : 0;
 
     var Dashboard = function(element, options) {
         this.$ = $(element);
@@ -21,7 +23,10 @@
         height: 360,
         shadowType: 'normal',
         sensitive: false,
-        circleShadowSize: 100
+        circleShadowSize: 100,
+        onlyRefreshBody: true,
+        resizable: true,
+        resizeMessage: true
     };
 
     Dashboard.prototype.getOptions = function(options) {
@@ -37,7 +42,7 @@
             var name = panel.data('name') || panel.find('.panel-heading').text().replace('\n', '').replace(/(^\s*)|(\s*$)/g, '');
             var index = panel.attr('data-id');
 
-            if(tip === undefined || confirm(tip.format(name))) {
+            if(tip === undefined || tip === false || confirm(tip.format(name))) {
                 panel.parent().remove();
                 if(afterPanelRemoved && $.isFunction(afterPanelRemoved)) {
                     afterPanelRemoved(index);
@@ -47,9 +52,11 @@
     };
 
     Dashboard.prototype.handleRefreshEvent = function() {
+        var that = this;
+        var onlyRefreshBody = this.options.onlyRefreshBody;
         this.$.on('click', '.refresh-panel', function() {
             var panel = $(this).closest('.panel');
-            refreshPanel(panel);
+            that.refresh(panel, onlyRefreshBody);
         });
     };
 
@@ -63,14 +70,12 @@
 
         this.$.addClass('dashboard-draggable');
 
-        this.$.find('.panel-actions').mousedown(function(event) {
-            event.preventDefault();
+        this.$.on('mousedown', '.panel-actions, .drag-disabled', function(event) {
             event.stopPropagation();
         });
 
         var pColClass;
-        this.$.find('.panel-heading').mousedown(function(event) {
-            // console.log('--------------------------------');
+        this.$.on('mousedown', '.panel-heading, .panel-drag-handler', function(event) {
             var panel = $(this).closest('.panel');
             var pCol = panel.parent();
             var row = panel.closest('.row');
@@ -159,16 +164,11 @@
                             area = thisArea;
                             dropCol = col;
                         }
-                        // if(thisArea)
-                        // {
-                        //     console.log('panel ' + col.data('id'), '({0}, {1}, {2}, {3}), ({4}, {5}, {6}, {7})'.format(sX1, sY1, sX2, sY2, pX, pY, pX + pW, pY + pH));
-                        // }
                     } else {
                         var mX = event.pageX,
                             mY = event.pageY;
 
                         if(mX > pX && mY > pY && mX < (pX + pW) && mY < (pY + pH)) {
-                            // var dCol = row.find('.dragging-col');
                             dropCol = col;
                             return false;
                         }
@@ -205,11 +205,11 @@
                 row.children(':not(.dragging-col-holder)').each(function() {
                     var p = $(this).children('.panel');
                     p.data('order', ++newOrder);
-                    newOrders[p.attr('id')] = newOrder;
+                    newOrders[p.data('id') || p.attr('id')] = newOrder;
                     p.parent().attr('data-order', newOrder);
                 });
 
-                if(oldOrder != newOrders[panel.attr('id')]) {
+                if(oldOrder != newOrders[panel.data('id') || panel.attr('id')]) {
                     row.data('orders', newOrders);
 
                     if(afterOrdered && $.isFunction(afterOrdered)) {
@@ -231,13 +231,13 @@
     };
 
     Dashboard.prototype.handlePanelPadding = function() {
-        this.$.find('.panel-body > table, .panel-body > .list-group').closest('.panel-body').addClass('no-padding');
+        this.$.find('.panel-body > table, .panel-body > .list-group').parent().addClass('no-padding');
     };
 
     Dashboard.prototype.handlePanelHeight = function() {
         var dHeight = this.options.height;
 
-        this.$.find('.row').each(function() {
+        this.$.children('.row').each(function() {
             var row = $(this);
             var panels = row.find('.panel');
             var height = row.data('height') || dHeight;
@@ -249,29 +249,99 @@
                 });
             }
 
-            panels.each(function() {
-                var $this = $(this);
-                $this.find('.panel-body').css('height', height - $this.find('.panel-heading').outerHeight() - 2);
-            });
+            panels.css('height', height);
         });
     };
 
-    function refreshPanel(panel) {
-        var url = panel.data('url');
+    Dashboard.prototype.handleResizeEvent = function() {
+        var onResize = this.options.onResize;
+        var resizeMessage = this.options.resizeMessage;
+        var messagerAvaliable = resizeMessage && dashboardMessager;
+        this.$.on('mousedown', '.resize-handle', function(e) {
+            var $col = $(this).parent().addClass('resizing');
+            var $row = $col.closest('.row');
+            var startX = e.pageX;
+            var startWidth = $col.width();
+            var rowWidth = $row.width();
+            var oldGrid = Math.round(12*startWidth/rowWidth);
+            var lastGrid = oldGrid;
+            $col.attr('data-grid', oldGrid);
+
+            var mouseMove = function(event) {
+                var x = event.pageX;
+                var grid = Math.max(1, Math.min(12, Math.round(12 * (startWidth + (x - startX)) / rowWidth)));
+                if(lastGrid != grid) {
+                    $col.attr('data-grid', grid).css('width', (100*grid/12) + '%');
+                    if(messagerAvaliable) dashboardMessager[dashboardMessager.isShow ? 'update' : 'show'](Math.round(100*grid/12) + '% (' + grid + '/12)');
+                    lastGrid = grid;
+                }
+                event.preventDefault();
+                event.stopPropagation();
+            };
+
+            var mouseUp = function(event) {
+                $col.removeClass('resizing');
+                var lastGrid = $col.attr('data-grid');
+                if(oldGrid != lastGrid) {
+                    if($.isFunction(onResize)) {
+                        var revert = function() {
+                            $col.attr('data-grid', oldGrid).css('width', null);
+                        };
+                        var result = onResize({id: $col.children('.panel').data('id'), element: $col, old: oldGrid, grid: lastGrid, revert: revert});
+                        if(result === false) revert();
+                        else if(result !== true) {
+                            if(messagerAvaliable) dashboardMessager.show(Math.round(100*lastGrid/12) + '% (' + lastGrid + '/12)');
+                        }
+                    }
+                }
+
+                $('body').off('mousemove.resize', mouseMove).off('mouseup.resize', mouseUp);
+                event.preventDefault();
+                event.stopPropagation();
+            };
+
+            $('body').on('mousemove.resize', mouseMove).on('mouseup.resize', mouseUp);
+            e.preventDefault();
+            e.stopPropagation();
+        }).children('.row').children(':not(.dragging-col-holder)').append('<div class="resize-handle"><i class="icon icon-resize-h"></i></div>');
+    };
+
+    Dashboard.prototype.refresh = function($panel, onlyRefreshBody) {
+        var afterRefresh = this.options.afterRefresh;
+        $panel = $($panel);
+        var url = $panel.data('url');
         if(!url) return;
-        panel.addClass('panel-loading').find('.panel-heading .icon-refresh,.panel-heading .icon-repeat').addClass('icon-spin');
+        $panel.addClass('panel-loading').find('.panel-heading .icon-refresh,.panel-heading .icon-repeat').addClass('icon-spin');
         $.ajax({
             url: url,
             dataType: 'html'
         }).done(function(data) {
-            panel.find('.panel-body').html(data);
+            var $data = $(data);
+            if($data.hasClass('panel')) {
+                $panel.empty().append($data.children());
+            } else if(onlyRefreshBody) {
+                $panel.find('.panel-body').empty().html(data);
+            } else {
+                $panel.html(data);
+            }
+            if($.isFunction(afterRefresh)) {
+                afterRefresh.call(this, {
+                    result: true,
+                    data: data
+                });
+            }
         }).fail(function() {
-            panel.addClass('panel-error');
+            $panel.addClass('panel-error');
+            if($.isFunction(afterRefresh)) {
+                afterRefresh.call(this, {
+                    result: false
+                });
+            }
         }).always(function() {
-            panel.removeClass('panel-loading');
-            panel.find('.panel-heading .icon-refresh,.panel-heading .icon-repeat').removeClass('icon-spin');
+            $panel.removeClass('panel-loading');
+            $panel.find('.panel-heading .icon-refresh,.panel-heading .icon-repeat').removeClass('icon-spin');
         });
-    }
+    };
 
     function getRectArea(x1, y1, x2, y2) {
         return Math.abs((x2 - x1) * (y2 - y1));
@@ -293,15 +363,36 @@
     }
 
     Dashboard.prototype.init = function() {
-        this.handlePanelHeight();
-        this.handlePanelPadding();
-        this.handleRemoveEvent();
-        this.handleRefreshEvent();
+        var options = this.options, that = this;
+        if(options.data) {
+            var $row = $('<div class="row"/>');
+            $.each(options.data, function(idx, config) {
+                var $col = $('<div class="col-sm-' + (config.colWidth || 4) + '"/>', config.colAttrs);
+                var $panel = $('<div class="panel" data-id="' + (config.id || $.zui.uuid()) + '"/>', config.panelAttrs);
+                if(config.content !== undefined) {
+                    if($.isFunction(config.content)) {
+                        var content = config.content($panel);
+                        if(content !== true) {
+                            $panel.html(content);
+                        }
+                    } else {
+                        $panel.html(config.content);
+                    }
+                }
+                $row.append($col.append($panel.data('url', config.url)));
+            });
+            that.$.append($row);
+        }
 
-        if(this.draggable) this.handleDraggable();
+        that.handlePanelHeight();
+        that.handlePanelPadding();
+        that.handleRemoveEvent();
+        that.handleRefreshEvent();
+        if(options.resizable) that.handleResizeEvent();
+        if(that.draggable) that.handleDraggable();
 
         var orderSeed = 0;
-        this.$.find('.panel').each(function() {
+        that.$.find('.panel').each(function() {
             var $this = $(this);
             $this.data('order', ++orderSeed);
             if(!$this.attr('id')) {
@@ -311,8 +402,10 @@
                 $this.attr('data-id', orderSeed);
             }
 
-            refreshPanel($this);
+            that.refresh($this, options.onlyRefreshBody);
         });
+
+        that.$.find('[data-toggle="tooltip"]').tooltip({container: 'body'});
     };
 
     $.fn.dashboard = function(option) {

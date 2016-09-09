@@ -1,10 +1,17 @@
-//
-// The Variables of ZUI.
-// =========================
+/// ========================================================================
+/// Bootstrap: variables.less
+/// https://github.com/twbs/bootstrap/blob/master/less/variables.less
+/// 
+/// ZUI: The file has been changed in ZUI. It will not keep update with the
+/// Bootsrap version in the future.
+/// http://zui.sexy
+/// ========================================================================
+/// Bootrap: Copyright 2011-2016 Twitter, Inc. Licensed under MIT
+/// ========================================================================
 
-@footer-color: #333;
 
-// Form states and alerts
+// States
+
 @state-default-text:         @color-dark;
 @state-default-bg:           @color-gray-pale;
 @state-default-inverse-bg:   @color-dark;
@@ -47,17 +54,20 @@
 
 
 // Scaffolding
+
 @body-bg:               @color-back;
 @text-color:            @color-fore;
+@footer-bg:             #333;
+@footer-color:          #f0f0f0;
 
 // Links
+
 @link-color:            @color-secondary;
 @link-hover-color:      darken(@link-color, 15%);
 @link-hover-decoration: underline;
 
 
 // MEDIA QUERIES TYPES
-// -------------------------
 
 // Extra small screen (phone).
 @screen-xs:                  480px;
@@ -86,7 +96,6 @@
 
 
 // GRID SYSTEM
-// -------------------------
 
 // Number of grid columns.
 @grid-columns:               12;
@@ -94,7 +103,11 @@
 @grid-gutter-width:          20px;
 
 @grid-float-breakpoint:      @screen-tablet;
+// Point at which the navbar begins collapsing.
+@grid-float-breakpoint-max:  (@grid-float-breakpoint - 1);
 
+// Extra small screen / phone
+@container-phone:             ((420px + @grid-gutter-width));
 // Small screen / tablet
 @container-tablet:            ((720px + @grid-gutter-width));
 // Medium screen / desktop
@@ -104,7 +117,6 @@
 
 
 // TYPOGRAPHY
-// -------------------------
 
 // Font family.
 @font-family-sans-serif:  "Helvetica Neue", Helvetica, Tahoma, Arial, 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
@@ -115,8 +127,9 @@
 
 // Font size.
 @font-size-base:          13px;
-@font-size-large:         ceil((@font-size-base * 1.25)); // 18px
-@font-size-small:         ceil((@font-size-base * 0.85)); // 12px
+@font-size-large:         ceil((@font-size-base * 1.25));  //  17px
+@font-size-larger:        ceil((@font-size-base * 1.5)); // 18px
+@font-size-small:         ceil((@font-size-base * 0.85));  //  12px
 
 @font-size-h1:            floor((@font-size-base * 2.00)); //  26px
 @font-size-h2:            floor((@font-size-base * 1.58)); //  20px
@@ -137,7 +150,6 @@
 
 
 // COMPONENTS CONFIG
-// -------------------------
 
 @padding-base-vertical:          5px;
 @padding-base-horizontal:        12px;
@@ -180,8 +192,8 @@
 @caret-width-base:               4px;
 @caret-width-large:              5px;
 
+
 // Z-index master list
-// -------------------------
 // Used for a bird's eye view of components dependent on the z-axis
 // Try to avoid customizing these :)
 
@@ -195,7 +207,6 @@
 
 
 // TABLES
-// -------------------------
 
 @table-cell-padding:                 8px;
 @table-condensed-cell-padding:       5px;
@@ -210,7 +221,6 @@
 
 
 // DROPDOWNS
-// -------------------------
 
 @dropdown-bg:                    @component-bg;
 @dropdown-border:                @component-border;
@@ -230,7 +240,6 @@
 
 
 // BUTTONS
-// -------------------------
 
 @btn-font-weight:                normal;
 
@@ -264,7 +273,7 @@
 
 
 // PROGRESS BRAS
-// -------------------------
+
 @progress-bg:                 @color-gray-lighter;
 @progress-bar-color:          @color-light;
 
@@ -274,8 +283,9 @@
 @progress-bar-danger-bg:      @color-danger;
 @progress-bar-info-bg:        @color-info;
 
+
 // THUMBNAILS
-// -------------------------
+
 @thumbnail-padding:           4px;
 @thumbnail-bg:                @body-bg;
 @thumbnail-border:            @color-gray-light;
@@ -286,14 +296,12 @@
 
 
 // DIVIDER
-// -------------------------
 
 // Hr border color
 @hr-border:                   @color-gray-lighter;
 
 
 // LEBELS
-// -------------------------
 
 @label-default-bg:            @color-gray;
 @label-primary-bg:            @color-primary;
@@ -305,8 +313,9 @@
 @label-color:                 @color-light;
 @label-link-hover-color:      @color-light;
 
+
 // BADGES
-// -------------------------
+
 @badge-link-hover-color:      @color-light;
 @badge-bg:                    @color-gray-light;
 
@@ -315,9 +324,11 @@
 
 @badge-font-weight:           bold;
 @badge-line-height:           1;
-@badge-border-radius:         12px;
+@badge-border-radius:         9px;
+
 
 // INPUT
+
 @input-bg:                       @color-light;
 @input-bg-disabled:              @color-gray-lighter;
 
@@ -341,14 +352,15 @@
 //** Disabled cursor for form controls and buttons.
 @cursor-disabled:                not-allowed;
 
+
 // BREADCUMBS
-// -------------------------
+
 @breadcrumb-color:            #ccc;
 @breadcrumb-active-color:     @color-gray;
 
 
 // LIST GROUP
-// -------------------------
+
 @list-group-bg:               @color-light;
 @list-group-border:           @color-gray-light;
 @list-group-border-radius:    @border-radius-base;
@@ -396,7 +408,7 @@
 
 
 // MODALS
-// -------------------------
+
 @modal-inner-padding:         15px;
 
 @modal-title-padding:         15px;
@@ -417,7 +429,7 @@
 
 
 // ALERTS
-// -------------------------
+
 @alert-padding:               15px;
 @alert-border-radius:         @border-radius-small;
 @alert-link-font-weight:      bold;
@@ -448,7 +460,7 @@
 
 
 // ANIMATION
-// --------------------------
+
 @animation-speed-normal:             0.4s;
 @animation-speed-fast:               0.2s;
 @animation-speed-slow:               0.8s;
@@ -456,9 +468,12 @@
 
 
 // CODE
-// ------------------------
+
 @code-color:                  @color-danger;
-@code-bg:                     @color-gray-pale;
+@code-bg:                     #f9f2f4;
+
+@kbd-color:                   #666;
+@kbd-bg:                      @color-gray-pale;
 
 @pre-bg:                      @component-bg-gray;
 @pre-color:                   @color-gray-dark;
@@ -468,7 +483,7 @@
 
 
 // TYPE
-// ------------------------
+
 @text-muted:                  @color-gray;
 @abbr-border-color:           @color-gray-light;
 @headings-small-color:        @color-gray;
@@ -479,7 +494,6 @@
 
 
 // MISCELLANEOUS
-// -------------------------
 
 // Hr border color
 @hr-border:                   @color-gray-lighter;
@@ -489,7 +503,6 @@
 
 
 // ARTICLE
-// -------------------------
 
 @article-padding:                 20px;
 @article-section-padding:         10px 15px;
@@ -509,21 +522,18 @@
 
 
 // CONTENTS LIST
-// -----------------------
 
 @list-padding:                15px;
 @list-item-bg-hover:          #f5f5f5;
 
 
 // CARDS
-// ----------------------
 
 @card-border-color:           @color-gray-light;
 @card-reveal-bg:              @color-gray-pale;
 
 
 // PAGER
-// -------------------------
 
 @pager-bg:                        @color-light;
 @pager-border:                    @color-gray-light;
@@ -538,7 +548,6 @@
 
 
 // NAVBAR
-// -------------------------
 
 // Basics of a navbar
 @navbar-height:                    50px;
@@ -547,6 +556,7 @@
 @navbar-border-radius:             @border-radius-base;
 @navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
 @navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
+@navbar-collapse-max-height:       340px;
 
 @navbar-default-color:             @color-gray-dark;
 @navbar-default-bg:                lighten(@color-gray-pale, 2.5%);
@@ -568,7 +578,7 @@
 
 // Navbar toggle
 @navbar-default-toggle-hover-bg:           @color-gray-light;
-@navbar-default-toggle-icon-bar-bg:        #ccc;
+@navbar-default-toggle-icon-bar-bg:        @color-gray;
 @navbar-default-toggle-border-color:       @color-gray-light;
 
 
@@ -576,8 +586,8 @@
 //
 // Reset inverted navbar basics
 @navbar-inverse-color:                      @color-gray-light;
-@navbar-inverse-bg:                         #333;
-@navbar-inverse-border:                     darken(@navbar-inverse-bg, 5%);
+@navbar-inverse-bg: #232323;
+@navbar-inverse-border:                     darken(@navbar-inverse-bg, 10%);
 
 // Inverted navbar links
 @navbar-inverse-link-color:                 @color-gray-light;
@@ -589,8 +599,8 @@
 @navbar-inverse-link-disabled-bg:           transparent;
 
 // Inverted navbar brand label
-@navbar-inverse-brand-color:                @color-light;
-@navbar-inverse-brand-hover-color:          #FFF;
+@navbar-inverse-brand-color:                @navbar-inverse-link-color;
+@navbar-inverse-brand-hover-color:          @color-light;
 @navbar-inverse-brand-hover-bg:             transparent;
 
 // Inverted navbar toggle
@@ -600,7 +610,6 @@
 
 
 // NAVS
-// -------------------------
 
 @nav-link-padding:                            8px 15px;
 @nav-link-padding-top:                        10px;
@@ -642,7 +651,6 @@
 
 
 // CAROUSEL
-// ------------------------
 
 @carousel-text-shadow:                        0 1px 2px rgba(0,0,0,.6);
 
@@ -658,14 +666,14 @@
 
 
 // CLOSE
-// ------------------------
+
 @close-color:                 @color-black;
 @close-font-weight:           bold;
 @close-text-shadow:           0 1px 0 @color-light;
 
 
 // TOOLTIPS
-// -------------------------
+
 @tooltip-max-width:           200px;
 @tooltip-color:               @color-back;
 @tooltip-bg:                  @color-fore;
@@ -675,7 +683,7 @@
 
 
 // POPOVER
-// -------------------------
+
 @popover-bg:                          @color-light;
 @popover-max-width:                   300px;
 @popover-border-color:                rgba(0,0,0,.2);
@@ -692,9 +700,9 @@
 
 
 // ICON FONT
-// -------------------------
+
 @icon-font-path:          "../fonts";
-@icon-font-version:       "2.1.0";
+@icon-font-version:       "2.2.0";
 @icon-border-color:       @color-gray-light;
 @icon-muted-color:        @color-gray-light;
 @icon-light-color:        @color-light;
@@ -705,11 +713,11 @@
 
 
 // SCROLLBAR
-// -------------------------
+
 @scrollbar-size:  10px;
 @scrollbar-radius: 5px;
 
 
 // MESSAGER
-// -------------------------
+
 @messager-radius: 20px;

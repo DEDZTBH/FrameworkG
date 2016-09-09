@@ -1,16 +1,27 @@
+/// ========================================================================
+/// ZUI: comment.less
+/// http://zui.sexy
+/// ========================================================================
+/// Copyright 2014-2016 cnezsoft.com; Licensed MIT
+/// ========================================================================
+
+
+// Comments list view
+
 .comments {
   > header {
-    // padding-bottom: 10px;
     border-bottom: 1px solid @color-gray-lighter;
 
     > .alert {
       padding: @alert-padding/2 @alert-padding;
       margin-bottom: -10px;
     }
-    //
     h1, h2, h3 {
-        margin: 30px 0 20px;
+      margin: 10px 0;
+      padding: 10px 0;
     }
+
+    > .pull-right {}
   }
 
   > footer {
@@ -23,9 +34,7 @@
         float: left;
         margin-top: 10px;
       }
-      > .avatar + .form {
-        padding-left: 50px;
-      }
+      > .avatar + .form { padding-left: 50px; }
     }
   }
 }
@@ -48,21 +57,18 @@
     margin-top: 10px;
   }
 
-  > .avatar + .content {
-    padding-left: 50px;
-  }
+  > .avatar + .content { padding-left: 50px; }
 
   > .content {
-    > .text {
-      padding-top: 5px;
-    }
+    > .text { margin-top: 5px; }
 
     > .actions {
+      margin-top: 4px;
       > a {
-        padding-left: 2px;
         display: inline-block;
-        padding-right: 5px;
         color: @color-gray;
+
+        + a {margin-left: 5px;}
       }
     }
   }
@@ -70,9 +76,7 @@
   &:hover {
     > .content {
       > .actions {
-        > a {
-          color: @link-color;
-        }
+        > a { color: @link-color; }
       }
     }
   }
@@ -86,9 +90,8 @@
     > .comment {
       border: none;
       border-top: 1px solid @color-gray-lighter;
-      &:last-child {
-        padding-bottom: 0;
-      }
+
+      &:last-child { padding-bottom: 0; }
     }
   }
 }

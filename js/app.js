@@ -69,6 +69,8 @@ app.config(['$routeProvider', function($routeProvider){
         })
         .when('/login',{templateUrl:'template/view.login.ng'})
         // .when('/register',{templateUrl:'template/view.register.ng'})
+        .when('/admin',{templateUrl:'template/admin/view.admin.dashboard.ng',controller:'adminDashboardCtrl'})
+        .when('/admin/settings',{templateUrl:'template/admin/view.admin.settings.ng',controller:'adminDashboardCtrl'})
         .otherwise({redirectTo:'/'});
 }]);
 app.factory("config", function ($http) {
@@ -120,7 +122,7 @@ app.controller('globalCtrl',function ($scope,$http,config,userdata) {
     $http.get("/api/version").then(function (result) {
         $scope.cms_backendVersion = result.data.version;
     });
-    $scope.cms_frontendVersion = "0.1 Beta";
+    $scope.cms_frontendVersion = "0.2 Alpha";
     if (userdata.isLogin()){
         userdata.update();
     }
@@ -151,5 +153,13 @@ app.controller('indexCtrl',function ($scope) {
 
 });
 app.controller('passageViewCtrl',function ($scope) {
+
+});
+app.controller('adminSideNavCtrl',function ($scope) {
+    $scope.getActiveClass = function (targetURL) {
+        return (window.location.hash == (targetURL));
+    };
+});
+app.controller('adminDashboardCtrl',function ($scope) {
 
 });

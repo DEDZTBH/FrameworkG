@@ -1,9 +1,20 @@
+/// ========================================================================
+/// ZUI: tree.less
+/// http://zui.sexy
+/// ========================================================================
+/// Copyright 2016 cnezsoft.com; Licensed MIT
+/// ========================================================================
+
+
+// Tree view
+
 .tree {
   padding-left: 0;
 
   ul {
     display: none;
     padding-left: 0;
+    position: relative;
   }
 
   li {
@@ -22,9 +33,7 @@
       top: 10px;
     }
 
-    &.has-list:before {
-      display: none;
-    }
+    &.has-list:before { display: none; }
 
     > .list-toggle {
       position: absolute;
@@ -37,26 +46,51 @@
       cursor: pointer;
       z-index: 10;
 
-      &:before {
-        content: '\e6f1';
-      }
+      &:before { content: '\e6f1'; }
 
-      &:hover, &:active {
+      &:hover,
+      &:active {
         color: @link-hover-color;
       }
     }
 
     &.open {
-      > ul {
-        display: block;
-      }
+      > ul { display: block; }
 
-      > .list-toggle:before {
-        content: '\e6f2';
-      }
+      > .list-toggle:before { content: '\e6f2'; }
     }
   }
 }
+
+.tree-actions {
+  display: inline-block;
+  margin-left: 5px;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.tree-action {
+  display: inline-block;
+  margin-left: 5px;
+  color: @color-gray;
+
+  &:hover,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+.tree li:hover > .tree-actions,
+.tree-item-wrapper:hover > .tree-actions {
+  opacity: 1;
+}
+
+.tree-drag-holder {
+  opacity: 0.4;
+  background-color: @color-pale;
+}
+
+.tree .sort-handler { cursor: move; }
 
 .tree-animate {
   ul {
@@ -78,21 +112,6 @@
 }
 
 .tree-lines {
-  li {
-    &.has-list {
-      &.open > ul:after {
-        display: block;
-        position: absolute;
-        content: ' ';
-        border-left: 1px dotted #999;
-        top: 16px;
-        left: 9px;
-        bottom: 16px;
-        z-index: 1;
-      }
-    }
-  }
-
   ul > li {
     &:after {
       display: block;
@@ -105,9 +124,33 @@
       width: 18px;
     }
 
+    &:before,
+    &.has-list:before {
+      background: none;
+      content: ' ';
+      display: block;
+      position: absolute;
+      width: auto;
+      height: auto;
+      border: none;
+      border-left: 1px dotted #999;
+      top: -12px;
+      bottom: 13px;
+      left: -11px;
+    }
+
+    &:last-child:before {
+      bottom: auto;
+      height: 23px;
+    }
+
+    &:first-child:before {top: -7px;}
+
     &.has-list:after {
       width: 14px;
     }
+
+    &.drag-shadow:after {display: none}
   }
 }
 
@@ -115,7 +158,7 @@
   li > .list-toggle:before {content: '\e6ef'}
   li.open > .list-toggle:before {content: '\e6f0'}
 
-  li:before {border: 1px solid #999; background-color: #fff; width: 4px; height: 4px; border-radius: 2px; left: 7px; top: 9px;}
+  &.tree-lines ul > li:first-child:before {top: -6px;}
 
   &.tree-lines li.has-list.open > ul:after {top: 16px}
   ul > li.has-list:after {width: 13px}

@@ -1,12 +1,14 @@
-/*!
- * Chart.js
+/* ========================================================================
+ * Chart.js: Chart.Doughnut.js [Version: 1.0.2]
  * http://chartjs.org/
- * Version: 1.0.2
- *
- * Copyright 2015 Nick Downie
- * Released under the MIT license
+ * 
+ * ZUI: The file has been changed in ZUI. It will not keep update with the
+ * official version in the future.
+ * http://zui.sexy
+ * ========================================================================
+ * Copyright 2015 Nick Downie, Released under the MIT license
  * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
- */
+ * ======================================================================== */
 
 /// ----- ZUI change begin -----
 /// Add jquery object to namespace
@@ -132,7 +134,7 @@
                 segment.color = color.toCssStr();
                 if(!segment.highlight) segment.highlight = color.lighten(5).toCssStr();
             }
-            /// ----- ZUI change begin -----
+            /// ----- ZUI change end -----
             var index = atIndex || this.segments.length;
             this.segments.splice(index, 0, new this.SegmentArc({
                 id: typeof segment.id === 'undefined' ? index : segment.id,
@@ -148,7 +150,7 @@
                 circumference: (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),
                 /// ----- ZUI change begin -----
                 showLabel: segment.showLabel !== false,
-                /// ----- ZUI change begin -----
+                /// ----- ZUI change end -----
                 label: segment.label
             }));
             if(!silent) {
@@ -228,7 +230,7 @@
             var chartWidthHalf = this.chart.width / 2;
             var chartHeightHalf = this.chart.height / 2;
 
-            if(placement === 'outside') {
+            if(placement === 'outside') { // outside
                 var isRight = x >= 0;
                 var lineX = x + chartWidthHalf;
                 var lineY = y + chartHeightHalf;
@@ -248,7 +250,8 @@
                     else labelPos++;
                 }
                 while(labelPosMap[isRight ? labelPos : (-labelPos)] && labelPos < maxPos) labelPos++;
-                if(labelPosMap[labelPos]) return;
+
+                if(labelPosMap[isRight ? labelPos : (-labelPos)]) return;
                 y = (labelPos - 1) * textHeight + options.scaleFontSize / 2;
                 labelPosMap[labelPos] = true;
 
@@ -261,12 +264,11 @@
                 ctx.strokeWidth = options.scaleLineWidth;
                 ctx.stroke();
                 ctx.fillStyle = segment.fillColor;
-            } else { // outside
+            } else { // inside
                 x = x * 0.6 + chartWidthHalf;
                 y = y * 0.6 + chartHeightHalf;
                 ctx.fillStyle = ($.zui && $.zui.Color) ? (new $.zui.Color(segment.fillColor).contrast().toCssStr()) : '#fff';
             }
-
             ctx.fillText(text, x, y);
         },
         // ZUI change end

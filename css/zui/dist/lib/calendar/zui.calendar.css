@@ -1,5 +1,5 @@
 /*!
- * ZUI - v1.4.0 - 2016-08-31
+ * ZUI: 日历 - v1.5.0 - 2016-09-09
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
  * Copyright (c) 2016 cnezsoft.com; Licensed MIT
@@ -87,7 +87,8 @@
 .calendar .cell-day.current
 {
     background-color: #fff0d5;
-    box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #808080;
+    -webkit-box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #808080;
+            box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #808080;
 }
 .calendar .cell-day.current > .day > .content
 {
@@ -104,6 +105,7 @@
 
     cursor: pointer;
     -webkit-transition: all .4s cubic-bezier(.175, .885, .32, 1);
+         -o-transition: all .4s cubic-bezier(.175, .885, .32, 1);
             transition: all .4s cubic-bezier(.175, .885, .32, 1);
 
     opacity: .95;

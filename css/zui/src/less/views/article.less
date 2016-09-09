@@ -1,11 +1,22 @@
+/// ========================================================================
+/// ZUI: article.less
+/// http://zui.sexy
+/// ========================================================================
+/// Copyright 2014-2016 cnezsoft.com; Licensed MIT
+/// ========================================================================
+
+
+// Article view
+
 .article {
   padding: @article-padding;
 
   > header {
     h1,
     h2,
-    h3, {
+    h3 {
       line-height: 1.5;
+      margin-bottom: @line-height-computed;
     }
 
     > .abstract,
@@ -37,21 +48,16 @@
   }
 }
 
+.article > .content,
 .article-content {
   font-size: @article-font-size;
   line-height: @article-line-height;
 
   padding: @line-height-computed 0;
 
-  h1  {
-    font-size: @article-font-size-h1;
-  }
-  h2  {
-    font-size: @article-font-size-h2;
-  }
-  h3  {
-    font-size: @article-font-size-h3;
-  }
+  h1  { font-size: @article-font-size-h1; }
+  h2  { font-size: @article-font-size-h2; }
+  h3  { font-size: @article-font-size-h3; }
   h4  {
     margin-top: 15px;
     font-size: @article-font-size-h4;
@@ -65,13 +71,9 @@
     font-size: @article-font-size-h6;
   }
 
-  img {
-    margin: @line-height-computed / 2 0;
-  }
+  img { margin: @line-height-computed / 2 0; }
 
   p {
-    margin: 0;
-
     > img {
       margin-right: 10px;
 
@@ -87,7 +89,6 @@
   }
 
   table {
-    width: 100%;
     margin-bottom: @line-height-computed;
 
     // Cells
@@ -97,8 +98,6 @@
       line-height: @line-height-base;
       vertical-align: top;
       border-bottom: 1px solid @table-border-color;
-
-      .transition(all,@animation-speed-fast,@animation-type);
     }
 
     // Bottom align for column headings
@@ -110,6 +109,14 @@
   }
 }
 
-body.article-content {
-  padding: 8px;
+.article-content p { margin-bottom: 0; }
+.article-content table { width: 100%; }
+.article > .content table {
+  th,
+  td,
+  > thead > tr > th {
+    border: 1px solid @table-border-color;
+  }
 }
+
+body.article-content { padding: 8px; }

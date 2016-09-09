@@ -2,7 +2,7 @@
  * ZUI: storeb.js
  * http://zui.sexy
  * ========================================================================
- * Copyright (c) 2014 cnezsoft.com; Licensed MIT
+ * Copyright (c) 2014-2016 cnezsoft.com; Licensed MIT
  * ======================================================================== */
 
 
@@ -10,16 +10,55 @@
     'use strict';
 
     var lsName = 'localStorage';
-    var storage = window[lsName],
-        old = window.store,
+    var storage,
+        dataset,
         pageName = 'page_' + window.location.pathname + window.location.search;
 
     /* The Store object */
     var Store = function() {
         this.slience = true;
-        this.enable = (lsName in window) && window[lsName] && window[lsName].setItem;
+        try {
+            if((lsName in window) && window[lsName] && window[lsName].setItem) {
+                this.enable = true;
+                storage = window[lsName];
+            }
+        } catch(e){}
+        if(!this.enable) {
+            dataset = {};
+            storage = {
+                getLength: function() {
+                    var length = 0;
+                    $.each(dataset, function() {
+                        length++;
+                    });
+                    return length;
+                },
+                key: function(index) {
+                    var key, i = 0;
+                    $.each(dataset, function(k) {
+                        if(i === index) {
+                            key = k;
+                            return false;
+                        }
+                        i++;
+                    });
+                    return key;
+                },
+                removeItem: function(key) {
+                    delete dataset[key];
+                },
+                getItem: function(key) {
+                    return dataset[key];
+                },
+                setItem: function(key, val) {
+                    dataset[key] = val;
+                },
+                clear: function() {
+                    dataset = {};
+                }
+            };
+        }
         this.storage = storage;
-
         this.page = this.get(pageName, {});
     };
 
@@ -141,7 +180,8 @@
 
     /* Iterate all items with callback */
     Store.prototype.forEach = function(callback) {
-        for(var i = storage.length - 1; i >= 0; i--) {
+        var length = this.length();
+        for(var i = length - 1; i >= 0; i--) {
             var key = storage.key(i);
             callback(key, this.get(key));
         }

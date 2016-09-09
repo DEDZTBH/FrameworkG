@@ -1,11 +1,21 @@
-/*!
- * Chart.js
+/* ========================================================================
+ * Chart.js: Chart.Core.js [Version: 1.0.2]
  * http://chartjs.org/
- * Version: 1.0.2
- *
+ * 
+ * ZUI: The file has been changed in ZUI. It will not keep update with the
+ * official version in the future.
+ * http://zui.sexy
+ * ========================================================================
+ * Copyright 2015 Nick Downie, Released under the MIT license
+ * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
+ * ======================================================================== */
+
+
+/*!
+ * Chart.js 1.0.2 
  * Copyright 2015 Nick Downie
  * Released under the MIT license
- * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
+ * http://chartjs.org/
  */
 
 /// ----- ZUI change begin -----

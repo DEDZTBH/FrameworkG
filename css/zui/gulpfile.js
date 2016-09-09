@@ -1,6 +1,7 @@
 var extend = require('extend'),
     runSequence = require('run-sequence'),
     fs = require('fs'),
+    chmod = require('gulp-chmod'),
     moment = require('moment'),
     less = require('gulp-less'),
     cssmin = require('gulp-cssmin'),
@@ -18,6 +19,7 @@ var extend = require('extend'),
     format = require('string-format').extend(String.prototype),
     colors = require('colors'),
     gulp = require('gulp'),
+    jsonminify = require('gulp-jsonminify'),
     zui = require('./zui.json'),
     pkg = require('./package.json'),
     showFileDetail = true;
@@ -35,12 +37,13 @@ var today = moment();
 var typeSet = ['less', 'js', 'resource'],
     lib = zui.lib,
     builds = zui.builds,
-    banner = ('/*!\n' +
+    BANNER = ('/*!\n' +
         ' * {title} - v{version} - {date}\n' +
         ' * {homepage}\n' +
         ' * GitHub: {repo} \n' +
         ' * Copyright (c) {year} {author}; Licensed {license}\n' +
-        ' */\n\n').format({
+        ' */\n\n'),
+    BANNER_OPTONS = {
         title: pkg.title || pkg.name,
         version: pkg.version,
         date: today.format('YYYY-MM-DD'),
@@ -49,8 +52,16 @@ var typeSet = ['less', 'js', 'resource'],
         year: today.format('YYYY'),
         author: pkg.author,
         license: pkg.license
-    }),
-    statement = '/* Some code copy from Bootstrap v3.0.0 by @fat and @mdo. (Copyright 2013 Twitter, Inc. Licensed under http://www.apache.org/licenses/)*/\n\n';
+    },
+    BOOTSTRAP_STATEMENT = '/*! Some code copy from Bootstrap v3.0.0 by @fat and @mdo. (Copyright 2013 Twitter, Inc. Licensed under http://www.apache.org/licenses/)*/\n\n';
+
+function formatBanner(options) {
+    if(options && options.title) {
+        options.title = BANNER_OPTONS.title + ': ' + options.title;
+    }
+    options = Object.assign({}, BANNER_OPTONS, options);
+    return BANNER.format(options);
+}
 
 function tryStatSync(path) {
     try {
@@ -65,18 +76,19 @@ function isFileExist(path) {
     return stats && stats.isFile();
 }
 
-function getItemList(list, items, ignoreDpds) {
+function getItemList(list, items, ignoreDpds, ignoreBasic) {
     items = items || [];
 
     if(Array.isArray(list)) {
         list.forEach(function(name) {
-            getItemList(name, items, ignoreDpds);
+            if(name === 'basic' && ignoreBasic) return;
+            getItemList(name, items, ignoreDpds, ignoreBasic);
         });
-    } else {
+    } else if(!(list === 'basic' && ignoreBasic)) {
         var item = lib[list];
         if(item && items.indexOf(list) < 0) {
             if(!ignoreDpds && item.dpds) {
-                getItemList(item.dpds, items, ignoreDpds);
+                getItemList(item.dpds, items, ignoreDpds, ignoreBasic);
             }
             if(item.src) items.push(list);
         }
@@ -96,8 +108,8 @@ function getBuildSource(build) {
 
     if(!Array.isArray(list)) list = [list];
 
-    if(build.basicDpds) list = getItemList(build.basicDpds, list);
-    list = getItemList(build.includes, list, build.ignoreDpds);
+    if(build.settingDpds) list = getItemList(build.settingDpds, list);
+    list = getItemList(build.includes, list, build.ignoreDpds, build.ignoreBasic);
 
     list.forEach(function(item) {
         var libItem = lib[item];
@@ -215,9 +227,12 @@ function buildBundle(name, callback, type) {
                 build = {
                     title: buildLib.name,
                     dest: 'dist/lib/' + name + '/',
-                    filename: name,
+                    filename: buildLib.filename || ((buildLib.source && buildLib.source !== 'Bootstrap') ? name : ('zui.' + name)),
                     includes: [name],
-                    thirdpart: buildLib.thirdpart
+                    source: buildLib.source,
+                    settingDpds: (buildLib.src && buildLib.src.less && buildLib.src.less.length) ? ['setting'] : null,
+                    ignoreBasic: true,
+                    ignoreDpds: buildLib.ignoreDpds !== undefined ? buildLib.ignoreDpds : true
                 };
             } else {
                 console.log(('           Cannot found the build config: ' + name).red);
@@ -228,14 +243,11 @@ function buildBundle(name, callback, type) {
         console.log(('           === BUILD BUNDLES ' + name.toUpperCase() + ' [' + build.bundles.join(', ') + '] ===').blue.bold);
         var bundlesTaskList = [];
         build.bundles.forEach(function(bundleName) {
-            var bundleBuild = builds[bundleName];
-            if(bundleBuild) {
-                gulp.task('build:' + bundleName, function(cb) {
-                    buildBundle(bundleName, cb, type);
-                });
+            gulp.task('build:' + bundleName, function(cb) {
+                buildBundle(bundleName, cb, type);
+            });
 
-                bundlesTaskList.push('build:' + bundleName);
-            }
+            bundlesTaskList.push('build:' + bundleName);
         });
 
         gulp.task('build:' + name + ':bundles', function(cb) {
@@ -258,9 +270,10 @@ function buildBundle(name, callback, type) {
 
     console.log(('           --- build ' + name + ' ---').cyan.bold);
 
+    var banner = formatBanner({title: build.title || name});
     var source = getBuildSource(build),
-        bannerContent = build.thirdpart ?
-        '' : banner + (build.bootstrapStatement ? statement : '');
+        bannerContent = (build.source && build.source !== 'Bootstrap') ?
+        '' : banner + (build.bootstrapStatement ? BOOTSTRAP_STATEMENT : '');
 
     if(source.js && source.js.length && (!type || type === 'js')) {
         console.log(('         + Ready to process ' + source.js.length + ' javascript files.').bold);
@@ -277,17 +290,18 @@ function buildBundle(name, callback, type) {
             return gulp.src(source.js)
                 .pipe(concat(build.filename + '.js'))
                 .pipe(header(bannerContent))
+                .pipe(chmod(644))
                 .pipe(gulp.dest(destPath))
                 .on('end', function() {
                     console.log('      js > '.yellow.bold + (destPath + build.filename + '.js').italic.underline);
                 })
                 //.pipe(sourcemaps.init())
-                .pipe(uglify())
+                .pipe(uglify({preserveComments: 'some'}))
                 .pipe(rename({
                     suffix: '.min'
                 }))
-                .pipe(header(bannerContent))
                 //.pipe(sourcemaps.write())
+                .pipe(chmod(644))
                 .pipe(gulp.dest(destPath))
                 .on('end', function() {
                     console.log('      js > '.yellow.bold + (destPath + build.filename + '.min.js').italic.underline);
@@ -331,11 +345,19 @@ function buildBundle(name, callback, type) {
             return gulp.src(buildSourceFilePath)
                 .pipe(less())
                 .pipe(autoprefixer({
-                    browsers: ['> 1%'],
+                    browsers: ["Android 2.3",
+                        "Android >= 4",
+                        "Chrome >= 20",
+                        "Firefox >= 24",
+                        "Explorer >= 8",
+                        "iOS >= 6",
+                        "Opera >= 12",
+                        "Safari >= 6"],
                     cascade: true
                 }))
                 .pipe(csscomb())
                 .pipe(header(bannerContent))
+                .pipe(chmod(644))
                 .pipe(gulp.dest(destPath))
                 .on('end', function() {
                     console.log('     css > '.yellow.bold + (destPath + build.filename + '.css').italic.underline);
@@ -350,8 +372,9 @@ function buildBundle(name, callback, type) {
                 .pipe(rename({
                     suffix: '.min'
                 }))
-                .pipe(header(bannerContent))
+
                 //.pipe(sourcemaps.write())
+                .pipe(chmod(644))
                 .pipe(gulp.dest(destPath))
                 .on('end', function() {
                     console.log('     css > '.yellow.bold + (destPath + build.filename + '.min.css').italic.underline);
@@ -373,6 +396,7 @@ function buildBundle(name, callback, type) {
                 return gulp.src(sourceConfig.src, {
                         base: sourceConfig.base
                     })
+                    .pipe(chmod(644))
                     .pipe(gulp.dest(destPath))
                     .on('end', function() {
                         console.log('resource > '.yellow.bold + (destPath + sourceConfig.file).italic.underline);
@@ -407,6 +431,7 @@ function buildBundle(name, callback, type) {
 gulp.task('build', function(callback) {
     var name = process.argv[3] || 'dist';
     if(name && name[0] === '-') name = name.substr(1);
+    if(name === 'lib') name = 'seperate';
     var type = process.argv.length > 4 ? process.argv[4] : false;
     if(type && type[0] === '-') type = type.substr(1);
     console.log('  BEGIN >> ' + (' Build ' + name.bold + ' ').inverse);
@@ -415,16 +440,18 @@ gulp.task('build', function(callback) {
     }, type);
 });
 
-['dist', 'doc', 'theme'].forEach(function(name) {
-    gulp.task(name, function(callback) {
+['dist', 'doc', 'theme', 'lib'].forEach(function(name) {
+    var depsTasks = (name == 'dist' || name == 'doc') ? ['minJSON'] : [];
+    gulp.task(name, depsTasks, function(callback) {
         console.log('  BEGIN >> ' + (' Build ' + name.bold + ' ').inverse);
-        buildBundle(name, function() {
+        buildBundle(name == 'lib' ? 'seperate' : name, function() {
             console.log('    END >> ' + (' Build ' + name.bold + ' completed. ').green.inverse);
             callback();
         });
     });
 
     gulp.task('watch:' + name, function() {
+        if(name === 'lib') name = 'seperate';
         gulp.watch(["./src/less/**/*"], function(event) {
             buildBundle(name, function() {
                 console.log('         √ '.green + (' WATCH ' + name.bold + ' COMPLETED. ').yellow.inverse);
@@ -446,6 +473,18 @@ gulp.task('build', function(callback) {
     });
 });
 
+gulp.task('minJSON', function(cb) {
+    gulp.src(['./docs/index.json', './docs/icons.json'])
+        .pipe(jsonminify())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('./docs/'));
+    gulp.src(['zui.json'])
+        .pipe(jsonminify())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('./docs/'));
+    cb();
+});
+
 gulp.task('prettify:js', function() {
     return gulp.src('./src/js/**/*')
         .pipe(prettify({
@@ -465,6 +504,7 @@ gulp.task('default', function() {
 // Init custom gulp tasks
 if(isFileExist("gulpfile.custom.js")) {
     require("./gulpfile.custom.js")(gulp, {
+        chmod: chmod,
         less: less,
         cssmin: cssmin,
         csscomb: csscomb,

@@ -53,22 +53,6 @@
             }
         };
 
-    // getLastDayOfMonth = function(date)
-    // {
-    //     var d = date.clone();
-    //     var month = d.getMonth();
-    //     d.setDate(28);
-
-    //     while (d.getMonth() == month)
-    //     {
-    //         d.addDays(1);
-    //     }
-
-    //     d.addDays(-1);
-
-    //     return d;
-    // };
-
     var Calendar = function(element, options) {
         this.name = name;
         this.$ = $(element);
@@ -91,8 +75,6 @@
 
         this.date = this.options.startDate || 'today';
         this.view = this.options.startView || 'month';
-
-        this.date = 'today';
 
         this.$.toggleClass('limit-event-title', options.limitEventTitle);
 
@@ -576,93 +558,66 @@
 
         if(options.withHeader) {
             that.$caption.text(lang.yearMonth.format(thisYear, thisMonth + 1, lang.monthNames[thisMonth]));
-            that.$todayBtn.toggleClass('disabled', thisMonth === todayMonth);
+            that.$todayBtn.toggleClass('disabled', thisMonth === todayMonth && thisYear === todayYear);
         }
 
-        // var $event,
-        //     cal;
-        // $.each(that.events, function(index, e)
-        // {
-        //     if (e.start >= firstDay && e.start <= lastDay)
-        //     {
-        //         $day = $days.filter('[data-date="' + e.start.toDateString() + '"]');
-        //         if ($day.length)
-        //         {
-        //             $event = $('<div data-id="' + e.id + '" class="event" title="' + e.desc + '"><span class="time">' + e.start.format('hh:mm') + '</span> <span class="title">' + e.title + '</span></div>');
-        //             $event.find('.time').toggle(!e.allDay);
-        //             $event.data('event', e);
-
-        //             if (e.calendar)
-        //             {
-        //                 cal = calendars[e.calendar];
-        //                 if (cal)
-        //                 {
-        //                     if(cal.presetColor) {
-        //                         $event.addClass('color-' + cal.color);
-        //                     } else {
-        //                         $event.css({'background-color': cal.color, color: cal.textColor});
-        //                     }
-        //                 }
-        //             }
-
-        //             $day.find('.events').append($event);
-        //         }
-        //     }
-        // });
-
         if(options.dragThenDrop) {
-            $view.find('.event').droppable({
-                target: $days,
-                container: $view,
-                flex: true,
-                start: function() {
-                    $e.addClass('event-dragging');
-                },
-                drop: function(e) {
-                    var et = e.element.data('event'),
-                        newDate = e.target.attr('data-date');
-                    var startDate = et.start.clone();
-                    if(startDate.toDateString() != newDate) {
-                        newDate = new Date(newDate);
-                        newDate.setHours(startDate.getHours());
-                        newDate.setMinutes(startDate.getMinutes());
-                        newDate.setSeconds(startDate.getSeconds());
+            if($.fn.droppable) {
+                $view.find('.event').droppable({
+                    target: $days,
+                    container: $view,
+                    flex: true,
+                    start: function() {
+                        $e.addClass('event-dragging');
+                    },
+                    drop: function(e) {
+                        var et = e.element.data('event'),
+                            newDate = e.target.attr('data-date');
+                        if(!et || !newDate) return;
+                        var startDate = et.start.clone();
+                        if(startDate.toDateString() != newDate) {
+                            newDate = new Date(newDate);
+                            newDate.setHours(startDate.getHours());
+                            newDate.setMinutes(startDate.getMinutes());
+                            newDate.setSeconds(startDate.getSeconds());
 
-                        if(self.callEvent('beforeChange', {
-                                event: et,
-                                change: 'start',
-                                to: newDate
-                            })) {
-                            var oldEnd = et.end.clone();
-
-                            et.end.addMilliseconds(et.end.getTime() - startDate.getTime());
-                            et.start = newDate;
-
-                            // e.target.find('.events').append(e.element);
-                            that.display();
-
-                            self.callEvent('change', {
-                                data: self.data,
-                                changes: [{
+                            if(self.callEvent('beforeChange', {
                                     event: et,
+                                    change: 'start',
+                                    to: newDate
+                                })) {
+                                var oldEnd = et.end.clone();
+
+                                et.end.addMilliseconds(et.end.getTime() - startDate.getTime());
+                                et.start = newDate;
+
+                                that.display();
+
+                                self.callEvent('change', {
+                                    data: self.data,
                                     changes: [{
-                                        change: 'start',
-                                        from: startDate,
-                                        to: et.start
-                                    }, {
-                                        change: 'end',
-                                        from: oldEnd,
-                                        to: et.end
+                                        event: et,
+                                        changes: [{
+                                            change: 'start',
+                                            from: startDate,
+                                            to: et.start
+                                        }, {
+                                            change: 'end',
+                                            from: oldEnd,
+                                            to: et.end
+                                        }]
                                     }]
-                                }]
-                            });
+                                });
+                            }
                         }
+                    },
+                    finish: function() {
+                        $e.removeClass('event-dragging');
                     }
-                },
-                finish: function() {
-                    $e.removeClass('event-dragging');
-                }
-            });
+                });
+            } else {
+                console.error('Calendar dragThenDrop option requires droppable.js');
+            }
         }
     };
 

@@ -1,6 +1,10 @@
 /* ========================================================================
  * Bootstrap: tab.js v3.0.0
  * http://twbs.github.com/bootstrap/javascript.html#tabs
+ *  
+ * ZUI: The file has been changed in ZUI. It will not keep update with the
+ * Bootsrap version in the future.
+ * http://zui.sexy
  * ========================================================================
  * Copyright 2012 Twitter, Inc.
  *
@@ -32,7 +36,7 @@
     Tab.prototype.show = function() {
         var $this = this.element
         var $ul = $this.closest('ul:not(.dropdown-menu)')
-        var selector = $this.attr('data-target')
+        var selector = $this.attr('data-target') || $this.attr('data-tab')
 
         if(!selector) {
             selector = $this.attr('href')
@@ -127,7 +131,7 @@
     // TAB DATA-API
     // ============
 
-    $(document).on('click.zui.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function(e) {
+    $(document).on('click.zui.tab.data-api', '[data-toggle="tab"], [data-tab]', function(e) {
         e.preventDefault()
         $(this).tab('show')
     })

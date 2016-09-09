@@ -1,6 +1,10 @@
 /* ========================================================================
  * Bootstrap: collapse.js v3.0.0
  * http://twbs.github.com/bootstrap/javascript.html#collapse
+ * 
+ * ZUI: The file has been changed in ZUI. It will not keep update with the
+ * Bootsrap version in the future.
+ * http://zui.sexy
  * ========================================================================
  * Copyright 2012 Twitter, Inc.
  *
@@ -51,7 +55,7 @@
         this.$element.trigger(startEvent)
         if(startEvent.isDefaultPrevented()) return
 
-        var actives = this.$parent && this.$parent.find('> .panel > .in')
+        var actives = this.$parent && this.$parent.find('.in')
 
         if(actives && actives.length) {
             var hasData = actives.data(zuiname)
