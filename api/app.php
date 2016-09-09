@@ -1,5 +1,5 @@
 <?php
-include_once "include/db.php";
+include_once __DIR__+"/include/db.php";
 class Database
 {
     private static $db_address = db_host;
@@ -51,7 +51,7 @@ class User{
     static function login($username,$password){
         $prefix = Database::$db_prefix;
         $self = new self();
-        $sqlresult = mysqli_query(Database::getConnection(),"SELECT * FROM `{$prefix}user` WHERE `mobile`='{$username}' OR `email`='{$username}'");
+        $sqlresult = mysqli_query(Database::getConnection(),"SELECT * FROM `{$prefix}user` WHERE `username`='{$username}' OR `email`='{$username}'");
         if($row = mysqli_fetch_array($sqlresult)){
             if ($row['password'] == md5($password)){
                 $self->isValid = true;

@@ -47,7 +47,17 @@ app.controller("settingCtrl",function ($scope,$http) {
     $scope.testConnection = function () {
         $http.post("/install/testdb.php",$scope.dbSetting).then(function (result) {
             $scope.testStatus = result.data.success?1:-1;
-            // alert($scope.testStatus);
         });
     };
+
+    $scope.createDB = function () {
+        $('#userinputScreen').hide();
+        $('#progress').show();
+
+        $http.post("/install/createdbconf.php",$scope.dbSetting).then(function (result) {
+            $scope.installResult = result.data.success;
+            $('#progress').hide();
+            $('#result').show();
+        });
+    }
 });
