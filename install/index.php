@@ -12,9 +12,9 @@ if (file_exists("../api/include/db.php")){
     <link href="/css/index.css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
-<body>
-<div class="container" style="margin-top: 100px;">
-    <div class="panel align-center" style="max-width: 400px;" ng-controller="settingCtrl">
+<body ng-controller="settingCtrl">
+<div class="container" style="margin-top: 100px; display: none;" id="userinputScreen">
+    <div class="panel align-center" style="max-width: 400px;" >
         <div class="panel-heading">
             <h3>Install FrameworkG</h3>
         </div>
@@ -41,9 +41,26 @@ if (file_exists("../api/include/db.php")){
                     <input type="text" class="form-control" ng-model="dbSetting.dbprefix" required>
                 </div><br>
                 <div class="input-group">
+                    <span class="input-group-addon">Default Prefix</span>
+                    <input type="text" class="form-control" ng-model="dbSetting.dbprefix" required>
+                </div><br>
+                <div class="pull-right" ng-show="testStatus==1">
+                    <button type="button" class="btn btn-default">Next</button>
+                </div>
+                <div class="input-group">
                     <button type="button" class="btn" ng-click="testConnection()" ng-class="{'btn-default':testStatus==0,'btn-danger':testStatus==-1,'btn-success':testStatus==1}">Test</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="container" style="margin-top: 100px;" id="progress">
+    <div class="panel align-center" style="max-width: 500px;">
+        <div class="panel-heading">
+            <h3>Installing...</h3>
+        </div>
+        <div class="panel-body">
+            Please Wait...
         </div>
     </div>
 </div>
