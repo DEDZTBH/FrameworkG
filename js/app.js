@@ -82,10 +82,10 @@ app.factory("userdata", function ($http) {
     var data = {};
     return {
         setSession:function (session) {
-            Cookies.set('session',session,{ domain: 'vh6.cn' });
+            Cookies.set('session',session,{ path: '/' });
         },
         resetSession:function () {
-            Cookies.remove('session',{domain:'vh6.cn'});
+            Cookies.remove('session',{path: '/'});
             data = {};
         },
         get: function () {

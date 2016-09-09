@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__+"/include/db.php";
+require __DIR__."/include/db.php";
 class Database
 {
     private static $db_address = db_host;
@@ -51,7 +51,7 @@ class User{
     static function login($username,$password){
         $prefix = Database::$db_prefix;
         $self = new self();
-        $sqlresult = mysqli_query(Database::getConnection(),"SELECT * FROM `{$prefix}user` WHERE `username`='{$username}' OR `email`='{$username}'");
+        $sqlresult = mysqli_query(Database::getConnection(),"SELECT * FROM `{$prefix}user` WHERE `username`='{$username}'");
         if($row = mysqli_fetch_array($sqlresult)){
             if ($row['password'] == md5($password)){
                 $self->isValid = true;
@@ -59,6 +59,9 @@ class User{
                 $self->sessionID = uniqid();
                 mysqli_query(Database::getConnection(),"INSERT INTO `{$prefix}cache` (`user_id`,`sessionkey`) VALUES ('{$row['user_id']}','{$self->sessionID}') ON DUPLICATE KEY UPDATE `sessionkey`=VALUES(`sessionkey`)");
             }
+        }else{
+            var_dump($_POST);
+            var_dump($prefix);
         }
         return $self;
     }
