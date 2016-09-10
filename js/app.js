@@ -59,8 +59,6 @@ app.factory('httpInterceptor', ['$q', '$injector', function ($q, $injector) {
     };
     return httpInterceptor;
 }]);
-
-
 app.config(['$routeProvider', function($routeProvider){
     $routeProvider
         .when('/',{
@@ -70,7 +68,7 @@ app.config(['$routeProvider', function($routeProvider){
         .when('/login',{templateUrl:'template/view.login.ng'})
         // .when('/register',{templateUrl:'template/view.register.ng'})
         .when('/admin',{templateUrl:'template/admin/view.admin.dashboard.ng',controller:'adminDashboardCtrl'})
-        .when('/admin/settings',{templateUrl:'template/admin/view.admin.settings.ng',controller:'adminDashboardCtrl'})
+        .when('/admin/settings',{templateUrl:'template/admin/view.admin.settings.ng',controller:'adminSettingCtrl'})
         .otherwise({redirectTo:'/'});
 }]);
 app.factory("config", function ($http) {
@@ -89,6 +87,9 @@ app.factory("userdata", function ($http) {
         resetSession:function () {
             Cookies.remove('session',{path: '/'});
             data = {};
+        },
+        session:function () {
+            return Cookies.get('session');
         },
         get: function () {
             return data;
@@ -122,7 +123,7 @@ app.controller('globalCtrl',function ($scope,$http,config,userdata) {
     $http.get("/api/version").then(function (result) {
         $scope.cms_backendVersion = result.data.version;
     });
-    $scope.cms_frontendVersion = "0.2 Alpha";
+    $scope.cms_frontendVersion = "0.2 Alpha(02a02f)";
     if (userdata.isLogin()){
         userdata.update();
     }
@@ -162,4 +163,40 @@ app.controller('adminSideNavCtrl',function ($scope) {
 });
 app.controller('adminDashboardCtrl',function ($scope) {
 
+});
+app.controller('adminSettingCtrl',function ($scope,$http,userdata) {
+    $scope.getRowActionName = function (setting) {
+        if (setting.isEdit != null && setting.isEdit) {
+            return "保存";
+        } else {
+            return "编辑";
+        }
+    };
+    $scope.settingList = [];
+    $scope.add = function () {
+        $scope.settingList.push({isEdit:true});
+    };
+    $scope.fetchSettingList = function () {
+        $http.get("/api/config?action=list").then(function (result) {
+            $scope.settingList = result.data.value;
+        });
+    };
+    $scope.submitAddRequest = function (setting) {
+        $http.post("/api/config?action=edit",{session:userdata.session(),settingName:setting.settingName,settingValue:setting.settingValue}).then(function () {
+            $scope.fetchSettingList();
+        });
+    };
+    $scope.submitRemoveRequest = function (setting) {
+        $http.post("/api/config?action=remove",{session:userdata.session(),settingName:setting.settingName}).then(function () {
+            $scope.fetchSettingList();
+        });
+    };
+    $scope.toggleEdit = function (setting) {
+        if (setting.isEdit) {
+            $scope.newItem = setting;
+            $scope.submitAddRequest(setting);
+        }
+        setting.isEdit = !setting.isEdit;
+    };
+    $scope.fetchSettingList();
 });

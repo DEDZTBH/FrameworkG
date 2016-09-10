@@ -28,7 +28,22 @@ class Config{
     }
     public static function setConfig($name,$value){
         $prefix = Database::$db_prefix;
-        return mysqli_query(Database::getConnection(),"INSERT INTO `{$prefix}settings` (`keyname`,`value`) VALUES ('{$name}','{$value}') ON DUPLICATE KEY UPDATE `value`=`value`");
+        return mysqli_query(Database::getConnection(),"INSERT INTO `{$prefix}settings` (`keyname`,`value`) VALUES ('{$name}','{$value}') ON DUPLICATE KEY UPDATE `value`=VALUES(`value`)");
+    }
+    public static function listConfig(){
+        $prefix = Database::$db_prefix;
+        $data = array();
+        $sqlr = mysqli_query(Database::getConnection(),"SELECT * FROM `{$prefix}settings`");
+        while ($row = mysqli_fetch_array($sqlr)){
+            array_push($data,["settingName"=>$row['keyname'],"settingValue"=>$row['value'],"isEdit"=>false]);
+        }
+        return $data;
+    }
+
+    public static function remove($settingName)
+    {
+        $prefix = Database::$db_prefix;
+        mysqli_query(Database::getConnection(),"DELETE FROM `{$prefix}settings` WHERE `keyname`='{$settingName}'");
     }
 }
 class User{
