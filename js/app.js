@@ -42,7 +42,7 @@ app.factory('httpInterceptor', ['$q', '$injector', function ($q, $injector) {
     var httpInterceptor = {
         'responseError': function (response) {
             if (response.status == 401) {
-                Cookies.remove('session',{domain:'vh6.cn'});
+                Cookies.remove('session',{path:"/"});
                 window.location.href = "/";
             }
             return $q.reject(response);
