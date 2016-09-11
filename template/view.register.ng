@@ -1,36 +1,36 @@
 <div class="row">
-    <div class="panel" id="registerPanel" ng-controller="registerCtrl as reg" style="max-width:300px;margin-left: auto; margin-right: auto;">
+    <div class="panel" id="registerPanel" style="max-width:300px;margin-left: auto; margin-right: auto;">
         <div class="panel-heading">
             <h2>注册</h2>
         </div>
-        <div class="panel-body">
-            <form ng-submit="reg.register()">
+        <div class="panel-body" ng-controller="registerCtrl as reg">
+            <form name="regForm" ng-submit="register()">
                 <div class="input-group ">
                     <label class="input-group-addon" for="r_email">邮　箱</label>
-                    <input type="email" id="r_email" class="form-control" ng-model="reg.email"
-                           placeholder="someone@example.com" ng-blur="reg.checkEmail()" required="">
+                    <input name="regEmail" type="email" id="r_email" class="form-control" ng-model="email"
+                           placeholder="someone@example.com" ng-blur="checkEmail()" required="">
                 </div><!-- Username Field-->
                 <br>
                 <div class="input-group ">
-                    <label class="input-group-addon" for="r_username">昵 &nbsp;&nbsp;称</label>
-                    <input type="text" id="r_username" class="form-control " ng-model="reg.username" placeholder="张三"
-                           ng-change="reg.checkUsername()" required="">
+                    <label class="input-group-addon" for="r_username">昵 称</label>
+                    <input name="regName" type="text" id="r_username" class="form-control " ng-model="username" placeholder="张三"
+                           ng-change="checkUsername()" required="">
                 </div><!-- Username Field-->
                 <br>
                 <div class="input-group ">
                     <label class="input-group-addon" for="r_password">密　码</label>
-                    <input type="password" id="r_password" class="form-control" ng-model="reg.passwd" ng-minlength="6"
-                           placeholder="密码 至少8位" ng-change="reg.checkpassword()" required="">
+                    <input name="regPass" type="password" id="r_password" class="form-control" ng-model="passwd" ng-minlength="8"
+                           placeholder="密码 至少8位" ng-change="checkpassword()" required="">
                 </div>
                 <br><!-- password Field-->
                 <div class="input-group ">
                     <label class="input-group-addon" for="r_password_repeat">重　复</label>
-                    <input type="password" id="r_password_repeat" class="form-control " ng-model="reg.passwd_repeat"
-                           placeholder="重复密码" ng-change="reg.checkPasswordRepeat()" required="">
+                    <input name="regPassRepeat" type="password" id="r_password_repeat" class="form-control " ng-model="passwd_repeat"
+                           placeholder="重复密码" ng-change="checkPasswordRepeat()" required="">
                 </div><!-- password repeat Field-->
                 <br>
                 <button type="submit" class="btn btn-block btn-primary"
-                        ng-disabled="reg.isFormPosted || (!reg.validateForm())" disabled="disabled">立即注册
+                        ng-disabled="isFormPosted || (!validateForm())" disabled="disabled">立即注册
                 </button>
                 <a class="btn btn-link btn-block" href="#/login">已有账号？点此登录</a>
             </form>

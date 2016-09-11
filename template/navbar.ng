@@ -13,8 +13,8 @@
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <!--<li><a href="#/register">注册</a></li>-->
                 <li><a href="#/login" ng-hide="userdata.isLogin()">登录</a></li>
+                <li><a href="#/register" ng-hide="userdata.isLogin()">注册</a></li>
                 <li><a href="#/admin" ng-show="userdata.isLogin()">管理中心</a></li>
                 <li><a ng-show="userdata.isLogin()" ng-click="logout()">退出</a></li>
             </ul>

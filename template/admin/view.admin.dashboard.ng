@@ -3,6 +3,49 @@
         <ng-include src="'/template/admin/view.admin.sidenavbar.ng'"></ng-include>
     </div>
     <div class="col-xs-8 col-sm-9 col-md-10">
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        统计数据
+                    </div>
+                    <div class="panel-body">
+                        暂无
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        账户余额
+                    </div>
+                    <div class="panel-body">
+                        <h1>
+
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xs-12 col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        续命
+                    </div>
+                    <div class="panel-body">
+                        <div ng-init="cnt = 0;">
+                            <button class="btn" ng-click="cnt = cnt + 1">+1s</button>
+                            <button class="btn" ng-click='cnt = cnt - 1'>-1s</button>
+                            已续{{cnt}}s
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
     </div>
 </div>

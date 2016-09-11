@@ -2,13 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="44c22022-be64-4b61-9551-41930a7a54d7" name="HN2" url="http://gf.codetector.cn">
-        <fileTransfer host="hn2.guardiantech.com.cn" port="14672" rootFolder="/var/sentora/hostdata/zadmin/public_html/gf_codetector_cn" accessType="SFTP">
-          <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" />
-          </advancedOptions>
-          <option name="port" value="14672" />
-        </fileTransfer>
+      <webServer id="651623d9-e7ab-4eb5-8141-bd5487b96ec3" name="myDisk" url="http://localhost">
+        <fileTransfer port="0" mountedRoot="D:\AppServ\www" accessType="MOUNT" />
       </webServer>
     </option>
   </component>

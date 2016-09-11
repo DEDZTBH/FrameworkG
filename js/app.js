@@ -42,7 +42,7 @@ app.factory('httpInterceptor', ['$q', '$injector', function ($q, $injector) {
     var httpInterceptor = {
         'responseError': function (response) {
             if (response.status == 401) {
-                Cookies.remove('session',{path:"/"});
+                Cookies.remove('session', {path: "/"});
                 window.location.href = "/";
             }
             return $q.reject(response);
@@ -59,36 +59,36 @@ app.factory('httpInterceptor', ['$q', '$injector', function ($q, $injector) {
     };
     return httpInterceptor;
 }]);
-app.config(['$routeProvider', function($routeProvider){
+app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
-        .when('/',{
-            templateUrl:'template/view.index.ng',
-            controller:'indexCtrl'
+        .when('/', {
+            templateUrl: 'template/view.index.ng',
+            controller: 'indexCtrl'
         })
-        .when('/login',{templateUrl:'template/view.login.ng'})
-        // .when('/register',{templateUrl:'template/view.register.ng'})
-        .when('/admin',{templateUrl:'template/admin/view.admin.dashboard.ng',controller:'adminDashboardCtrl'})
-        .when('/admin/settings',{templateUrl:'template/admin/view.admin.settings.ng',controller:'adminSettingCtrl'})
-        .otherwise({redirectTo:'/'});
+        .when('/login', {templateUrl: 'template/view.login.ng'})
+        .when('/register', {templateUrl: 'template/view.register.ng'})
+        .when('/admin', {templateUrl: 'template/admin/view.admin.dashboard.ng', controller: 'adminDashboardCtrl'})
+        .when('/admin/settings', {templateUrl: 'template/admin/view.admin.settings.ng', controller: 'adminSettingCtrl'})
+        .otherwise({redirectTo: '/'});
 }]);
 app.factory("config", function ($http) {
     return {
         get: function (name) {
-            return $http.get("/api/config?name="+name);
+            return $http.get("/api/config?name=" + name);
         }
     };
 });
 app.factory("userdata", function ($http) {
     var data = {};
     return {
-        setSession:function (session) {
-            Cookies.set('session',session,{ path: '/' });
+        setSession: function (session) {
+            Cookies.set('session', session, {path: '/'});
         },
-        resetSession:function () {
-            Cookies.remove('session',{path: '/'});
+        resetSession: function () {
+            Cookies.remove('session', {path: '/'});
             data = {};
         },
-        session:function () {
+        session: function () {
             return Cookies.get('session');
         },
         get: function () {
@@ -105,12 +105,12 @@ app.factory("userdata", function ($http) {
             });
         },
         isLogin: function () {
-            return Cookies.get("session")!=null && Cookies.get("session")!="";
+            return Cookies.get("session") != null && Cookies.get("session") != "";
         }
     };
 });
 
-app.controller('globalCtrl',function ($scope,$http,config,userdata) {
+app.controller('globalCtrl', function ($scope, $http, config, userdata) {
     config.get("siteTitle").then(function (result) {
         $scope.cms_site_title = result.data.value;
     });
@@ -124,47 +124,78 @@ app.controller('globalCtrl',function ($scope,$http,config,userdata) {
         $scope.cms_backendVersion = result.data.version;
     });
     $scope.cms_frontendVersion = "0.2 Alpha(02a02f)";
-    if (userdata.isLogin()){
+    if (userdata.isLogin()) {
         userdata.update();
     }
 });
-app.controller('navbarCtrl',function ($scope,$http,userdata,config) {
+app.controller('navbarCtrl', function ($scope, $http, userdata, config) {
     $scope.userdata = userdata;
     $scope.logout = function () {
         userdata.resetSession();
-        window.location.href="/";
+        window.location.href = "/";
     };
 });
-app.controller('loginCtrl', function($scope,$http,userdata) {
+app.controller('loginCtrl', function ($scope, $http, userdata) {
     $scope.isLoggingIn = false;
     $scope.login = function () {
-        $http.post("/api/login",{username:$scope.username,password:$scope.password}).then(function (result) {
-            var tooltip = $.zui.messager.show(result.data.success?"登录成功":"登录失败",{placement:'top',time:1000,type:result.data.success?"success":"danger"});
+        $http.post("/api/login", {username: $scope.username, password: $scope.password}).then(function (result) {
+            var tooltip = $.zui.messager.show(result.data.success ? "登录成功" : "登录失败", {
+                placement: 'top',
+                time: 1000,
+                type: result.data.success ? "success" : "danger"
+            });
             tooltip.show();
-            if (result.data.success){
+            if (result.data.success) {
                 userdata.setSession(result.data.session);
                 userdata.update();
-                window.location.href="#";
+                window.location.href = "#";
             }
         });
     };
 });
 
-app.controller('indexCtrl',function ($scope) {
+app.controller('registerCtrl', function ($scope) {
+    $scope.email = '';
+    $scope.username = '';
+    $scope.passwd = '';
+    $scope.passwd_repeat = '';
+    $scope.isFormPosted = false;
+
+    $scope.checkEmail = function () {
+        return $scope.regForm.regEmail.$valid;
+    };
+    $scope.checkUsername = function () {
+        return $scope.regForm.regName.$valid;
+    };
+    $scope.checkpassword = function () {
+        return $scope.regForm.regPass.$valid;
+    };
+    $scope.checkPasswordRepeat = function () {
+        return $scope.regForm.regPassRepeat.$valid && ($scope.passwd === $scope.passwd_repeat);
+    };
+    $scope.validateForm = function () {
+        return $scope.checkEmail() && $scope.checkUsername() && $scope.checkpassword() && $scope.checkPasswordRepeat();
+    };
+    $scope.register = function () {
+        $scope.isFormPosted = true;
+    };
+});
+
+app.controller('indexCtrl', function ($scope) {
 
 });
-app.controller('passageViewCtrl',function ($scope) {
+app.controller('passageViewCtrl', function ($scope) {
 
 });
-app.controller('adminSideNavCtrl',function ($scope) {
+app.controller('adminSideNavCtrl', function ($scope) {
     $scope.getActiveClass = function (targetURL) {
         return (window.location.hash == (targetURL));
     };
 });
-app.controller('adminDashboardCtrl',function ($scope) {
+app.controller('adminDashboardCtrl', function ($scope) {
 
 });
-app.controller('adminSettingCtrl',function ($scope,$http,userdata) {
+app.controller('adminSettingCtrl', function ($scope, $http, userdata) {
     $scope.getRowActionName = function (setting) {
         if (setting.isEdit != null && setting.isEdit) {
             return "保存";
@@ -174,7 +205,7 @@ app.controller('adminSettingCtrl',function ($scope,$http,userdata) {
     };
     $scope.settingList = [];
     $scope.add = function () {
-        $scope.settingList.push({isEdit:true});
+        $scope.settingList.push({isEdit: true});
     };
     $scope.fetchSettingList = function () {
         $http.get("/api/config?action=list").then(function (result) {
@@ -182,12 +213,19 @@ app.controller('adminSettingCtrl',function ($scope,$http,userdata) {
         });
     };
     $scope.submitAddRequest = function (setting) {
-        $http.post("/api/config?action=edit",{session:userdata.session(),settingName:setting.settingName,settingValue:setting.settingValue}).then(function () {
+        $http.post("/api/config?action=edit", {
+            session: userdata.session(),
+            settingName: setting.settingName,
+            settingValue: setting.settingValue
+        }).then(function () {
             $scope.fetchSettingList();
         });
     };
     $scope.submitRemoveRequest = function (setting) {
-        $http.post("/api/config?action=remove",{session:userdata.session(),settingName:setting.settingName}).then(function () {
+        $http.post("/api/config?action=remove", {
+            session: userdata.session(),
+            settingName: setting.settingName
+        }).then(function () {
             $scope.fetchSettingList();
         });
     };
